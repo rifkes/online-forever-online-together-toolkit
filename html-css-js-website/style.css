@@ -1,0 +1,28 @@
+/* this is a CSS comment */
+
+/* here, we change some of the default styles on our main document elements */
+html, body {
+	margin: 0;
+	background-color: lightskyblue;
+}
+
+@media(max-width: 767px) {
+	html, body {
+		background-color: #00ff00;
+	}
+}
+
+body {
+	padding: 20px;
+}
+
+.silly-text {
+	font-family: fantasy;
+	color: #ff0000;
+	font-size: 40px;
+	text-wrap: balance;
+}
+
+.centre-text {
+	text-align: center;
+}
