@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Making data persist</title>
+		<link rel="stylesheet" href="style.css"/>
+  </head>
+  <body>
+
+		<canvas id="canvas"></canvas>
+		<input type="color" value="#ff3355" id="color">
+
+		<script type="module">
+			import { supabase, } from './supabase-utils.js'
+
+			const canvas = document.querySelector('#canvas');
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+			const context = canvas.getContext('2d');
+
+			const room = supabase.channel('painting');
+
+			const draw = (xPercent, yPercent, fill,) => {
+				context.fillStyle = fill;
+
+				context.beginPath();
+				context.arc(xPercent * window.innerWidth, yPercent * window.innerHeight, 20, 0, 2 * Math.PI);
+				context.fill();
+			}
+
+			const handleMouseMove = (e) => {
+				const color = document.querySelector('#color').value;
+				const xPercent = e.clientX / window.innerWidth;
+				const yPercent = e.clientY / window.innerHeight;
+
+				draw(xPercent, yPercent, color);
+
+				room.send({
+					type: 'broadcast',
+					event: 'paint',
+					payload: { 
+						x: xPercent, 
+						y: yPercent,
+						color: color,
+					},
+				});
+			}
+
+			room
+			.on('broadcast', { event: 'paint' }, ({ payload }) => {
+				console.log('paint:', payload);
+				draw(payload.x, payload.y, payload.color);
+			})
+			.subscribe((status) => {
+				if (status === 'SUBSCRIBED') {
+					window.addEventListener('mousemove', handleMouseMove);
+				}
+			});
+
+			const handleWindowResize = () => {
+				canvas.width = window.innerWidth;
+				canvas.height = window.innerHeight;
+			}
+
+			window.addEventListener('resize', handleWindowResize);
+
+		</script>
+
+  </body>
+</html>

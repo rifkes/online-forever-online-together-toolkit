@@ -1,0 +1,6 @@
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+
+const supabaseUrl = 'https://fzafgcohhitzfouyggij.supabase.co'
+const supabaseKey = 'sb_publishable_KCCXFl06onuiQeEFOUrTBg_o5W2gnQZ'
+export const supabase = createClient(supabaseUrl, supabaseKey)
+export const user = await supabase.auth.getUser()

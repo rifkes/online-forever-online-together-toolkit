@@ -1,0 +1,79 @@
+html, body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100vh;
+	background-color: aquamarine;
+	overflow: hidden;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+#color {
+	position: fixed;
+	top: 0;
+	left: 0;
+}
+
+.data-entry {
+	position: fixed;
+	bottom: 12px;
+	left: 12px;
+	z-index: 999;
+}
+
+input[type=submit] {
+	background-color: green;
+	border: none;
+	border-radius: 50%;
+	width: 120px;
+	color: yellow;
+	cursor: pointer;
+}
+
+input[type=submit]:hover {
+	color: green;
+	background-color: yellow;
+}
+
+input[type=text] {
+	width: 120px;
+	display: block;
+	border: none;
+}
+
+input[type=text],
+#portrait,
+.guest {
+	background-color: white;
+	box-shadow: 2px 2px 12px 0 rgba(70, 0, 255, 0.25);
+}
+
+input:focus {
+	outline: none;
+	background-color: papayawhip;
+}
+
+.guest {
+	position: absolute;
+	transform: translate(-50%, -50%);
+	padding: 12px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+
+	transition: left 1s, top 1s;
+}
+
+.guest img {
+	pointer-events: none;
+	user-select: none;
+}
+
+p {
+	margin: 0;
+}
