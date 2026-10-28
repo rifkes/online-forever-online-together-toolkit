@@ -1,5 +1,7 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
 
+// change these to your own url and key
+// find these in your project dashboard
 const supabaseUrl = 'https://fzafgcohhitzfouyggij.supabase.co'
 const supabaseKey = 'sb_publishable_KCCXFl06onuiQeEFOUrTBg_o5W2gnQZ'
 export const supabase = createClient(supabaseUrl, supabaseKey)

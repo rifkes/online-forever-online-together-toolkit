@@ -19,24 +19,13 @@
 		<script type="module">
 			import { supabase, } from './supabase-utils.js'
 
+			// select the textarea
 			const textarea = document.querySelector('#textarea');
 			const room = supabase.channel('code');
 
-			const handleChange = (e) => {
-
-				room.send({
-					type: 'broadcast',
-					event: 'paint',
-					payload: { 
-						x: xPercent, 
-						y: yPercent,
-						color: color,
-					},
-				});
-			}
-
+			// set up our page to receive the code when it gets updated
 			room
-			.on('broadcast', { event: 'paint' }, ({ payload }) => {
+			.on('broadcast', { event: 'code' }, ({ payload }) => {
 				textarea.value = payload.code;
 			})
 			.subscribe((status) => {
@@ -46,17 +35,24 @@
 
 			let timeout;
 
+			// this function copies the text
 			const handleCopy = () => {
 				textarea.select();
 				document.execCommand('copy');
+
+				// add a class to the body element which shows the message saying copy has worked
 				document.body.classList.add('copy-success');
+
+				// after a time of 1000 milliseconds, we hide this message again
 				timeout = setTimeout(() => {
 					document.body.classList.remove('copy-success');
 				}, 1000);
 			}
 
+			// make a variable for the copy button
 			const copy = document.querySelector('#copy');
 
+			// add an event listener for when we click our copy button
 			copy.addEventListener('click', handleCopy);
 
 		</script>

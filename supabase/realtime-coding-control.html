@@ -50,7 +50,7 @@
 			}
 
 			room
-			.on('broadcast', { event: 'paint' }, ({ payload }) => {
+			.on('broadcast', { event: 'code' }, ({ payload }) => {
 				textarea.value = payload.code;
 			})
 			.subscribe((status) => {

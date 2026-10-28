@@ -18,8 +18,11 @@
 		<script type="module">
 			import { supabase, } from './supabase-utils.js'
 
+			// change this to the name of your table
+			const tableName = 'users';
+
 			let db_result = await supabase
-			.from('users')
+			.from(tableName)
 			.select('*')
 
 			const updateDatabase = async (e) => {
@@ -36,7 +39,7 @@
 				input.value = '';
 
 				const { error } = await supabase
-				.from('users')
+				.from(tableName)
 				.insert({
 					name: name,
 				});

@@ -21,9 +21,8 @@
 
 			const room = supabase.channel('painting');
 
-			const draw = (xPercent, yPercent, fill,) => {
+			const paint = (xPercent, yPercent, fill,) => {
 				context.fillStyle = fill;
-
 				context.beginPath();
 				context.arc(xPercent * window.innerWidth, yPercent * window.innerHeight, 20, 0, 2 * Math.PI);
 				context.fill();
@@ -34,7 +33,7 @@
 				const xPercent = e.clientX / window.innerWidth;
 				const yPercent = e.clientY / window.innerHeight;
 
-				draw(xPercent, yPercent, color);
+				paint(xPercent, yPercent, color);
 
 				room.send({
 					type: 'broadcast',
@@ -50,7 +49,7 @@
 			room
 			.on('broadcast', { event: 'paint' }, ({ payload }) => {
 				console.log('paint:', payload);
-				draw(payload.x, payload.y, payload.color);
+				paint(payload.x, payload.y, payload.color);
 			})
 			.subscribe((status) => {
 				if (status === 'SUBSCRIBED') {

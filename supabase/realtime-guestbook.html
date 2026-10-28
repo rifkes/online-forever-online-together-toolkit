@@ -17,8 +17,11 @@
 		<script type="module">
 			import { supabase, } from './supabase-utils.js'
 
+			// change this to the name of your table
+			const tableName = 'users';
+
 			let db_result = await supabase
-			.from('users')
+			.from(tableName)
 			.select('*')
 
 			const updateDatabase = async (e) => {
@@ -35,7 +38,7 @@
 				input.value = '';
 				
 				const { error } = await supabase
-				.from('users')
+				.from(tableName)
 				.insert({
 					name: name,
 					last_updated_timestamp: new Date().getTime().toString(),
@@ -86,7 +89,7 @@
 			.channel('guests')
 			.on(
 				'postgres_changes',
-				{ event: '*', schema: 'public', table: 'users' },
+				{ event: '*', schema: 'public', table: tableName },
 				(payload) => {
 					console.log('update! ', payload);
 					handleReceiveData(payload.new);

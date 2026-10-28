@@ -20,11 +20,14 @@
 		<script type="module">
 			import { supabase, } from './supabase-utils.js'
 
+			// change this to the name of your table
+			const tableName = 'users';
+
 			const canvas = document.querySelector('#portrait');
 			const context = canvas.getContext('2d');
 
 			let db_result = await supabase
-			.from('users')
+			.from(tableName)
 			.select('*')
 
 			const updateDatabase = async (e) => {
@@ -43,7 +46,7 @@
 				context.clearRect(0, 0, canvas.width, canvas.height);
 
 				const { error } = await supabase
-				.from('users')
+				.from(tableName)
 				.insert({
 					name: name,
 					doodle: dataUrl,
@@ -61,7 +64,7 @@
 
 			let mouseIsDown = false;
 
-			const draw = async (e) => {
+			const draw = (e) => {
 				if (!mouseIsDown) return;
 
 				const bounds = canvas.getBoundingClientRect();
@@ -99,7 +102,7 @@
 
 
 				const { error } = await supabase
-				.from('users')
+				.from(tableName)
 				.update({
 					x_percent: Math.random() * 100,
 					y_percent: Math.random() * 100,
@@ -155,7 +158,7 @@
 			.channel('guests')
 			.on(
 				'postgres_changes',
-				{ event: '*', schema: 'public', table: 'users' },
+				{ event: '*', schema: 'public', table: tableName },
 				(payload) => {
 					console.log('update! ', payload);
 					handleReceiveData(payload.new);
