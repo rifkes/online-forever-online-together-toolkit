@@ -48,7 +48,7 @@
 
 			room
 			.on('broadcast', { event: 'paint' }, ({ payload }) => {
-				console.log('paint:', payload);
+				// console.log('paint:', payload);
 				paint(payload.x, payload.y, payload.color);
 			})
 			.subscribe((status) => {
