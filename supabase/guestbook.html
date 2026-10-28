@@ -50,8 +50,8 @@
 			document.querySelector('#submissions').addEventListener('submit', updateDatabase);
 
 			const handleReceiveData = (item) => {
-				const username = item.username;
-				const id = 'visitor_' + username;
+				const id = item.id;
+				const id = 'visitor_' + id;
 
 				const container = document.createElement('div');
 				container.className = 'visitor';

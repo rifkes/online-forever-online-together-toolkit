@@ -95,8 +95,8 @@
 
 			// ************************ end canvas drawing **********
 
-			const moveGuest = async (username) => {
-				const guest = document.getElementById('guest_' + username);
+			const moveGuest = async (id) => {
+				const guest = document.getElementById('guest_' + id);
 				const x = Math.random() * 100;
 				const y = Math.random() * 100;
 
@@ -108,14 +108,14 @@
 					y_percent: Math.random() * 100,
 					last_updated_timestamp: new Date().getTime().toString(),
 				})
-				.eq('username', username);
+				.eq('id', id);
 
 				if (error) console.error('error inserting data! booooo: ', error);
 			}
 
 			const handleReceiveData = (item) => {
-				const username = item.username;
-				const id = 'guest_' + username;
+				const id = item.id;
+				const id = 'guest_' + id;
 
 				if (!document.getElementById(id)) {
 					const container = document.createElement('div');
@@ -136,7 +136,7 @@
 					document.body.appendChild(container);
 
 					container.addEventListener('click', () => {
-						moveGuest(username);
+						moveGuest(id);
 					});
 				} else {
 					const container = document.getElementById(id);

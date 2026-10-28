@@ -49,8 +49,10 @@
 			document.querySelector('#submissions').addEventListener('submit', updateDatabase);
 
 			const handleReceiveData = (item) => {
-				const username = item.username;
-				const id = 'guest_' + username;
+				const itemId = item.id;
+				const id = 'guest_' + itemId;
+
+				console.log(item, document.getElementById(id))
 
 				if (!document.getElementById(id)) {
 					const container = document.createElement('div');
@@ -62,10 +64,6 @@
 					container.appendChild(p);
 
 					document.body.appendChild(container);
-
-					container.addEventListener('click', () => {
-						moveGuest(username);
-					});
 				} else {
 					const container = document.getElementById(id);
 					container.style.left = item.x_percent + '%';
