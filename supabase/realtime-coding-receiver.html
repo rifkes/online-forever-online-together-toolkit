@@ -10,6 +10,12 @@
 
 		<textarea id="textarea"></textarea>
 
+		<button id="copy">
+			Copy!
+		</button>
+
+		<p class="copied">Code copied to clipboard!</p>
+
 		<script type="module">
 			import { supabase, } from './supabase-utils.js'
 
@@ -38,6 +44,20 @@
 				}
 			});
 
+			let timeout;
+
+			const handleCopy = () => {
+				textarea.select();
+				document.execCommand('copy');
+				document.body.classList.add('copy-success');
+				timeout = setTimeout(() => {
+					document.body.classList.add('copy-success');
+				}, 1000);
+			}
+
+			const copy = document.querySelector('#copy');
+
+			copy.addEventListener('click', handleCopy);
 
 		</script>
 
