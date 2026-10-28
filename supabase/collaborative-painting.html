@@ -19,6 +19,7 @@
 			canvas.height = window.innerHeight;
 			const context = canvas.getContext('2d');
 
+			// you don't have to make this on supabase, putting it here opens it like a portal!!!
 			const room = supabase.channel('painting');
 
 			const paint = (xPercent, yPercent, fill,) => {
