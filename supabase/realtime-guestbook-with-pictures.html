@@ -114,8 +114,8 @@
 			}
 
 			const handleReceiveData = (item) => {
-				const id = item.id;
-				const id = 'guest_' + id;
+				const itemId = item.id;
+				const id = 'guest_' + itemId;
 
 				if (!document.getElementById(id)) {
 					const container = document.createElement('div');
@@ -136,7 +136,7 @@
 					document.body.appendChild(container);
 
 					container.addEventListener('click', () => {
-						moveGuest(id);
+						moveGuest(itemId);
 					});
 				} else {
 					const container = document.getElementById(id);
