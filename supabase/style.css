@@ -77,3 +77,13 @@ input:focus {
 p {
 	margin: 0;
 }
+
+#textarea {
+	width: 100%;
+	height: 100%;
+	border: none;
+	font-family: monospace;
+	white-space: pre;
+	outline: none;
+	resize: none;
+}

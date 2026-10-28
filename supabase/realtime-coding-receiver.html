@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Making data persist</title>
+		<link rel="stylesheet" href="style.css"/>
+  </head>
+  <body>
+
+		<textarea id="textarea"></textarea>
+
+		<script type="module">
+			import { supabase, } from './supabase-utils.js'
+
+			const textarea = document.querySelector('#textarea');
+			const room = supabase.channel('code');
+
+			const handleChange = (e) => {
+
+				room.send({
+					type: 'broadcast',
+					event: 'paint',
+					payload: { 
+						x: xPercent, 
+						y: yPercent,
+						color: color,
+					},
+				});
+			}
+
+			room
+			.on('broadcast', { event: 'paint' }, ({ payload }) => {
+				textarea.value = payload.code;
+			})
+			.subscribe((status) => {
+				if (status === 'SUBSCRIBED') {
+				}
+			});
+
+
+		</script>
+
+  </body>
+</html>

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Making data persist</title>
+		<link rel="stylesheet" href="style.css"/>
+  </head>
+  <body style="padding: 12px;">
+
+		<div class="data-entry">
+			<form id="submissions">
+				<input type="text" id="name" placeholder="your name" required>
+				<input type="submit" value="submit">
+			</form>
+		</div>	
+
+		<script type="module">
+			import { supabase, } from './supabase-utils.js'
+
+			let db_result = await supabase
+			.from('users')
+			.select('*')
+
+			const updateDatabase = async (e) => {
+				e.preventDefault();
+
+				const input = document.querySelector('#name');
+				const name = input.value;
+
+				// if there's no name, we don't proceed
+				if (name.length === 0) {
+					return;
+				}
+
+				input.value = '';
+
+				const { error } = await supabase
+				.from('users')
+				.insert({
+					name: name,
+				});
+
+				if (error) console.error('error inserting data! booooo: ', error);
+			}
+
+			document.querySelector('#submissions').addEventListener('submit', updateDatabase);
+
+			const handleReceiveData = (item) => {
+				const username = item.username;
+				const id = 'visitor_' + username;
+
+				const container = document.createElement('div');
+				container.className = 'visitor';
+				container.id = id;
+					
+				const p = document.createElement('p');
+				p.textContent = item.name;
+				container.appendChild(p);
+
+				document.body.appendChild(container);
+			}
+
+			const data = db_result.data;
+
+			console.log('data received: ', data);
+
+			data?.forEach((item) => {
+				handleReceiveData(item);
+			});
+		</script>
+
+  </body>
+</html>

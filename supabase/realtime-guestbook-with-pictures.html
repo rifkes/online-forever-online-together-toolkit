@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Making data persist</title>
+		<link rel="stylesheet" href="style.css"/>
+  </head>
+  <body>
+
+		<div class="data-entry">
+			<canvas id="portrait" width="120" height="120"></canvas>
+
+			<form id="submissions">
+				<input type="text" id="name" placeholder="your name" required>
+				<input type="submit" value="submit">
+			</form>
+		</div>	
+
+		<script type="module">
+			import { supabase, } from './supabase-utils.js'
+
+			const canvas = document.querySelector('#portrait');
+			const context = canvas.getContext('2d');
+
+			let db_result = await supabase
+			.from('users')
+			.select('*')
+
+			const updateDatabase = async (e) => {
+				e.preventDefault();
+
+				const input = document.querySelector('#name');
+				const name = input.value;
+
+				// if there's no name, we don't proceed
+				if (name.length === 0) {
+					return;
+				}
+
+				const dataUrl = canvas.toDataURL('image/png');
+				input.value = '';
+				context.clearRect(0, 0, canvas.width, canvas.height);
+
+				const { error } = await supabase
+				.from('users')
+				.insert({
+					name: name,
+					doodle: dataUrl,
+					x_percent: Math.random() * 100,
+					y_percent: Math.random() * 100,
+					last_updated_timestamp: new Date().getTime().toString(),
+				});
+
+				if (error) console.error('error inserting data! booooo: ', error);
+			}
+
+			document.querySelector('#submissions').addEventListener('submit', updateDatabase);
+
+			// ************************ canvas drawing **********
+
+			let mouseIsDown = false;
+
+			const draw = async (e) => {
+				if (!mouseIsDown) return;
+
+				const bounds = canvas.getBoundingClientRect();
+
+				const left = bounds.left;
+				const top = bounds.top;
+
+				const x = e.clientX - left;
+				const y = e.clientY - top;
+				
+				context.beginPath();
+				context.arc(x, y, 4, 0, 2 * Math.PI);
+				context.fill();
+			}
+
+			const handleMouseDown = (e) => {
+				mouseIsDown = true;
+				draw(e);
+			}
+
+			const handleMouseUp = () => {
+				mouseIsDown = false;
+			}
+
+			canvas.addEventListener('mousedown', handleMouseDown);
+			window.addEventListener('mouseup', handleMouseUp);
+			canvas.addEventListener('mousemove', draw);
+
+			// ************************ end canvas drawing **********
+
+			const moveGuest = async (username) => {
+				const guest = document.getElementById('guest_' + username);
+				const x = Math.random() * 100;
+				const y = Math.random() * 100;
+
+
+				const { error } = await supabase
+				.from('users')
+				.update({
+					x_percent: Math.random() * 100,
+					y_percent: Math.random() * 100,
+					last_updated_timestamp: new Date().getTime().toString(),
+				})
+				.eq('username', username);
+
+				if (error) console.error('error inserting data! booooo: ', error);
+			}
+
+			const handleReceiveData = (item) => {
+				const username = item.username;
+				const id = 'guest_' + username;
+
+				if (!document.getElementById(id)) {
+					const container = document.createElement('div');
+					container.className = 'guest';
+					container.id = id;
+
+					container.style.left = item.x_percent + '%';
+					container.style.top = item.y_percent + '%';
+
+					const image = document.createElement('img');
+					image.src = item.doodle;
+					container.appendChild(image);
+						
+					const p = document.createElement('p');
+					p.textContent = item.name;
+					container.appendChild(p);
+
+					document.body.appendChild(container);
+
+					container.addEventListener('click', () => {
+						moveGuest(username);
+					});
+				} else {
+					const container = document.getElementById(id);
+					container.style.left = item.x_percent + '%';
+					container.style.top = item.y_percent + '%';
+				}
+			}
+
+			const data = db_result.data;
+
+			console.log('data received: ', data);
+
+			data?.forEach((item) => {
+				handleReceiveData(item);
+			});
+
+
+			const channel = supabase
+			.channel('guests')
+			.on(
+				'postgres_changes',
+				{ event: '*', schema: 'public', table: 'users' },
+				(payload) => {
+					console.log('update! ', payload);
+					handleReceiveData(payload.new);
+				}
+			)
+			.subscribe();
+
+			
+		</script>
+
+  </body>
+</html>
