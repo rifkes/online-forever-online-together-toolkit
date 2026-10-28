@@ -51,7 +51,7 @@
 				document.execCommand('copy');
 				document.body.classList.add('copy-success');
 				timeout = setTimeout(() => {
-					document.body.classList.add('copy-success');
+					document.body.classList.remove('copy-success');
 				}, 1000);
 			}
 
