@@ -17,6 +17,12 @@ html, body {
 	left: 0;
 }
 
+#submissions {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
 .data-entry {
 	position: fixed;
 	bottom: 12px;
@@ -38,13 +44,15 @@ input[type=submit]:hover {
 	background-color: yellow;
 }
 
-input[type=text] {
+input[type=text],
+input[type=url] {
 	width: 120px;
 	display: block;
 	border: none;
 }
 
 input[type=text],
+input[type=url],
 #portrait,
 .guest {
 	background-color: white;
@@ -122,4 +130,25 @@ p {
 
 body.copy-success .copied {
 	opacity: 1;
+}
+
+.hidden {
+	display: none;
+}
+
+.projects {
+	background-color: red;
+}
+
+.website-link {
+	display: block;
+	color: #000;
+	font-size: 6vw;
+	transition: color 0.2s ease;
+	text-decoration: none;
+	font-family: sans-serif;
+}
+
+.website-link:hover {
+	color: #fff;
 }
